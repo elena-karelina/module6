@@ -8,7 +8,7 @@ window.addEventListener("load", function() {
   image.addEventListener('click', () => {  
       if (!audio.paused) {  
         audio.pause();  
-      } else {   
+      } else {  
         audio.play();  
       }  
     }); 
