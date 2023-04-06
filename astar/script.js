@@ -8,7 +8,7 @@ const animation = false;
 const tractors_number = 30;
 let colums = document.getElementById("sizeM").value;
 
-const delay_timeout = 60;
+const delay_timeout = 3;
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 let cell_size = (canvas.width - paddingJS * 2) / colums;
@@ -19,6 +19,9 @@ let startClicked = false;
 let finishClicked = false;
 let freeClicked = false;
 let wallClicked = false;
+let found = false;
+
+let graph = [];
 
 let tractors = [];
 let matrix = createMatrix(colums, colums);
@@ -39,12 +42,33 @@ const start = document.getElementById('start');
 const finish = document.getElementById('finish');
 const free = document.getElementById('free');
 const wall = document.getElementById('wall');
+const begin = document.getElementById('begin');
 
 matrix[0][0] = true;
 
+class Node {
+  constructor(g, parent = Node, position = Cell) {
+    this.parent = parent;
+    this.position = position;
+    this.g = g;
+    this.h = finishCell.x - position.x + finishCell.y - position.y;
+    this.f = this.h + this.g;
+  }
+  forCell(other) {
+    return (this.position.x == other.x && this.position.y == other.y);
+  }
+  forNode(other) {
+    return (this.position.x == other.position.x && this.position.y == other.position.y);
+  }
+}
+
+let open = [];
+let close = [];
 
 function doSomething() {
-  console.log('enter was pressed');
+  found = false;
+  open = [];
+  close = [];
   colums = document.getElementById("sizeM").value;
   matrix = createMatrix(colums, colums);
   startCell = new Cell(null, null);
@@ -73,6 +97,19 @@ document.addEventListener('keydown', function (event) {
     doSomething();
   }
 });
+begin.addEventListener('click', function () {
+    astar();
+  
+});
+
+async function returnPath(finalNode) {
+  let temp = finalNode.parent
+  while (temp.parent != null) {
+    drawCanvas(temp.position.x, temp.position.y, 'pink');
+    temp = temp.parent;
+    await delay(delay_timeout);
+  }
+};
 
 async function main() {
   while (!isValidMaze()) {
@@ -137,7 +174,6 @@ function createMatrix(colums, rows) {
 }
 
 function drawMaze() {
-
   context.beginPath();
   context.rect(0, 0, canvas.width, canvas.height);
   context.fillStyle = background;
@@ -250,6 +286,113 @@ function createMouse(element) {
   return mouse;
 }
 
+function compareF(a, b) {
+  return a.f - b.f;
+};
+
+async function check(neighbor) {
+  if (neighbor.forCell(finishCell)) {
+    return;
+  }
+  if (close.find(node => node.forNode(neighbor))) {
+    return;
+  }
+  if (!open.find(node => node.forNode(neighbor))) {
+    open.push(neighbor);
+    drawCanvas(neighbor.position.x, neighbor.position.y, 'yellow');
+  }
+  else {
+    if (open.find(node => node.forNode(neighbor)).g > neighbor.g) {
+      open = open.filter(node => !(node.forNode(neighbor)));
+      open.push(neighbor);
+      drawCanvas(neighbor.position.x, neighbor.position.y, 'yellow');
+    }
+  }
+  await delay(delay_timeout);
+}
+async function astar() {
+  if (found) {
+    return;
+  }
+  found = true
+  var startNode = new Node;
+  startNode.g = 0;
+  startNode.parent = null;
+  startNode.position = startCell;
+  open.push(startNode);
+  let k = 0;
+  while (k == 0 && open.length > 0) {
+    open.sort(compareF);
+
+    let nowNode = open.shift();
+    let i = nowNode.position.y;
+    let j = nowNode.position.x;
+    console.log(nowNode.g);
+    close.push(nowNode);
+    if (!nowNode.forCell(startCell)) {
+      drawCanvas(nowNode.position.x, nowNode.position.y, 'grey');
+    }
+    if (i > 0 && matrix[i - 1][j]) {
+      let position = new Cell(j, i - 1);
+      let neighbor = new Node(nowNode.g + 1, nowNode, position);
+      if (neighbor.forCell(finishCell)) {
+        k = 1;
+        console.log(open[0].f);
+        console.log(open[0].position);
+        console.log(1);
+        returnPath(neighbor);
+        break;
+      }
+      check(neighbor);
+    }
+
+    if (i < colums - 1 && matrix[i + 1][j]) {
+      let position = new Cell(j, i + 1);
+      let neighbor = new Node(nowNode.g + 1, nowNode, position);
+      if (neighbor.forCell(finishCell)) {
+        k = 1;
+        console.log(open[0].f);
+        console.log(open[0].position);
+        console.log(2);
+        returnPath(neighbor);
+        break;
+      }
+      check(neighbor);
+    }
+
+    if (j > 0 && matrix[i][j - 1]) {
+      let position = new Cell(j - 1, i);
+      let neighbor = new Node(nowNode.g + 1, nowNode, position);
+      if (neighbor.forCell(finishCell)) {
+        k = 1;
+        console.log(open[0].f);
+        console.log(open[0].position);
+        console.log(3);
+        returnPath(neighbor);
+        break;
+      }
+      check(neighbor);
+    }
+
+    if (j < colums - 1 && matrix[i][j + 1]) {
+      let position = new Cell(j + 1, i);
+      let neighbor = new Node(nowNode.g + 1, nowNode, position);
+      if (neighbor.forCell(finishCell)) {
+        k = 1;
+        console.log(open[0].f);
+        console.log(open[0].position);
+        console.log(4);
+        returnPath(neighbor);
+        break;
+      }
+      check(neighbor);
+    }
+
+    await delay(delay_timeout);
+  }
+  
+}
+
 function tick() {
   start.addEventListener('click', function () {
     startClicked = true;
@@ -308,7 +451,7 @@ function tick() {
         let x = Math.trunc(cordX / cell_size);
         let y = Math.trunc(cordY / cell_size);
         if (matrix[y][x]) {
-          matrix[y][x]=false;
+          matrix[y][x] = false;
           drawMaze();
         }
       }
@@ -329,7 +472,7 @@ function tick() {
         let x = Math.trunc(cordX / cell_size);
         let y = Math.trunc(cordY / cell_size);
         if (!matrix[y][x]) {
-          matrix[y][x]=true;
+          matrix[y][x] = true;
           drawMaze();
         }
       }
@@ -338,6 +481,7 @@ function tick() {
   });
 
 }
+
 
 
 
