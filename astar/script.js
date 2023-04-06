@@ -101,7 +101,7 @@ begin.addEventListener('click', function () {
     astar();
   
 });
-
+// nu tipa
 async function returnPath(finalNode) {
   let temp = finalNode.parent
   while (temp.parent != null) {
