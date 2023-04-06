@@ -1,5 +1,16 @@
 #astar{
     display: flex;
     margin: auto;
+
+}
+#canvas{
     box-shadow: 0 7px 37px -5px #00C4F0;
+}
+#buttons{
+
+    margin-left: 10%;
+}
+button, input{
+    margin-bottom: 10px;
+    width: 100px;
 }

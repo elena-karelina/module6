@@ -8,7 +8,7 @@
    <title>Алгоритмы</title>
    <link rel="stylesheet" href="../style.css">
    <link rel="stylesheet" href="style1.css">
-
+   
    <link type="image/x-icon" href="../laptop.ico" rel="shortcut icon">
 </head>
 
@@ -25,11 +25,21 @@
    </div>
    <div id="main">
       <div id="astar">
-         <canvas></canvas>
-         <script src="script.js"></script>
+         <div id="canvas">
+            <canvas></canvas>
+           
+         </div>
+         <div id="buttons">
+            <br><button id="start">start</button>
+            <br><button id="finish">finish</button>
+            <br><input type="number" size="3" id="sizeM" min="1" max="60" step="1s" value="15">
+            <br><button id="free">free</button>
+            <br><button id="wall">wall</button>
+         </div>
       </div>
 
    </div>
+   <script src="script.js"></script> 
 </body>
 
 </html>
