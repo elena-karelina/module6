@@ -1,19 +1,25 @@
 const paddingJS = 5;
 const wall_color = "black";
 const free_color = "white";
+const path_color = "#0d6073";
+const neighbor_color = "#072c33";
+const clasedCelll_color = "#7d9296";
+const startCelll_color = "#c2ced1";
+const finishCelll_color = "#c6b8cc";
 const background = "#1C1C1C";
+
 const tractor_color = "red";
 const animation = false;
 
 const tractors_number = 30;
 let colums = document.getElementById("sizeM").value;
 
-const delay_timeout = 3;
+const delay_timeout = 10;
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 let cell_size = (canvas.width - paddingJS * 2) / colums;
 canvas.width = 550;
-canvas.height = canvas.width;
+canvas.height = 550;
 
 let startClicked = false;
 let finishClicked = false;
@@ -98,16 +104,20 @@ document.addEventListener('keydown', function (event) {
   }
 });
 begin.addEventListener('click', function () {
+  if (startCell.x!=null&&finishCell.x!=null)
+  {
     astar();
+  }
+    
   
 });
 // nu tipa
 async function returnPath(finalNode) {
   let temp = finalNode.parent
   while (temp.parent != null) {
-    drawCanvas(temp.position.x, temp.position.y, 'pink');
+    drawCanvas(temp.position.x, temp.position.y, path_color);
     temp = temp.parent;
-    await delay(delay_timeout);
+    await delay(30);
   }
 };
 
@@ -185,10 +195,10 @@ function drawMaze() {
     }
   }
   if (startCell.x != null) {
-    drawCanvas(startCell.x, startCell.y, 'red');
+    drawCanvas(startCell.x, startCell.y, startCelll_color);
   }
   if (finishCell.x != null) {
-    drawCanvas(finishCell.x, finishCell.y, 'green');
+    drawCanvas(finishCell.x, finishCell.y, finishCelll_color);
   }
 
 }
@@ -299,13 +309,13 @@ async function check(neighbor) {
   }
   if (!open.find(node => node.forNode(neighbor))) {
     open.push(neighbor);
-    drawCanvas(neighbor.position.x, neighbor.position.y, 'yellow');
+    drawCanvas(neighbor.position.x, neighbor.position.y, neighbor_color);
   }
   else {
     if (open.find(node => node.forNode(neighbor)).g > neighbor.g) {
       open = open.filter(node => !(node.forNode(neighbor)));
       open.push(neighbor);
-      drawCanvas(neighbor.position.x, neighbor.position.y, 'yellow');
+      drawCanvas(neighbor.position.x, neighbor.position.y, neighbor_color);
     }
   }
   await delay(delay_timeout);
@@ -330,7 +340,7 @@ async function astar() {
     console.log(nowNode.g);
     close.push(nowNode);
     if (!nowNode.forCell(startCell)) {
-      drawCanvas(nowNode.position.x, nowNode.position.y, 'grey');
+      drawCanvas(nowNode.position.x, nowNode.position.y, clasedCelll_color);
     }
     if (i > 0 && matrix[i - 1][j]) {
       let position = new Cell(j, i - 1);
