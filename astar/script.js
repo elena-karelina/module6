@@ -4,8 +4,10 @@ const free_color = "white";
 const path_color = "#0d6073";
 const neighbor_color = "#072c33";
 const clasedCelll_color = "#7d9296";
-const startCelll_color = "#c2ced1";
-const finishCelll_color = "#c6b8cc";
+const startCelll_color = "red";
+const finishCelll_color = "red";
+// const startCelll_color = "#c2ced1";
+// const finishCelll_color = "#c6b8cc";
 const background = "#1C1C1C";
 
 const tractor_color = "red";
@@ -71,7 +73,7 @@ class Node {
 let open = [];
 let close = [];
 
-function doSomething() {
+function refresh() {
   found = false;
   open = [];
   close = [];
@@ -95,12 +97,12 @@ function doSomething() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  doSomething();
+  refresh();
 });
 
 document.addEventListener('keydown', function (event) {
   if (event.code === 'Enter') {
-    doSomething();
+    refresh();
   }
 });
 begin.addEventListener('click', function () {
