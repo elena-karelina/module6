@@ -4,14 +4,14 @@ const free_color = "white";
 const path_color = "#0d6073";
 const neighbor_color = "#072c33";
 const clasedCelll_color = "#7d9296";
-const startCelll_color = "red";
-const finishCelll_color = "red";
+const startCelll_color = "#DC143C";
+const finishCelll_color = "#8B008B";
 // const startCelll_color = "#c2ced1";
 // const finishCelll_color = "#c6b8cc";
 const background = "#1C1C1C";
 
 const tractor_color = "red";
-const animation = false;
+let animation = document.getElementById('animation');;
 
 const tractors_number = 30;
 let colums = document.getElementById("sizeM").value;
@@ -20,8 +20,13 @@ const delay_timeout = 10;
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext("2d");
 let cell_size = (canvas.width - paddingJS * 2) / colums;
-canvas.width = 550;
-canvas.height = 550;
+
+var canva = document.getElementById('canvas');
+var canvasWidth = window.getComputedStyle(canvas).getPropertyValue("width");
+var canvasWidthNum = parseInt(canvasWidth.replace("px", ""));
+
+canvas.width = canvasWidthNum; 
+canvas.height = canvas.width; 
 
 let startClicked = false;
 let finishClicked = false;
@@ -110,8 +115,6 @@ begin.addEventListener('click', function () {
   {
     astar();
   }
-    
-  
 });
 // nu tipa
 async function returnPath(finalNode) {
@@ -128,7 +131,7 @@ async function main() {
     for (const tractor of tractors) {
       moveTractor(tractor);
     }
-    if (animation) {
+    if (animation.checked) {
       drawMaze();
       for (const tractor of tractors) {
         drawCanvas(tractor);
@@ -144,7 +147,7 @@ async function main() {
 
 }
 
-function even() {
+async function even() {
   let directions = [];
   for (let i = 0; i < colums; i++) {
     if (matrix[colums - 2][i]) {
@@ -153,6 +156,8 @@ function even() {
     else {
       matrix[colums - 1][getRandomItem(directions)] = true;
       directions = [];
+      drawMaze();
+      await delay(100);
     }
   }
   directions = []
@@ -163,6 +168,8 @@ function even() {
     if (!matrix[i][colums - 2] || i == colums - 1) {
       matrix[getRandomItem(directions)][colums - 1] = true;
       directions = [];
+      drawMaze();
+      await delay(100);
     }
   }
 

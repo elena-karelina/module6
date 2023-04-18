@@ -1,19 +1,30 @@
 #astar{
     display: flex;
     margin: auto;
-    width: 60%;
+    width: 50%;
 }
 #canvas{
-    box-shadow: 0 7px 37px -5px #00C4F0;
-    height: 550px;
+  box-shadow: 0 7px 37px -5px #00C4F0;
+  width: 100%;
+}
+#canva {
+width: 550px;
 }
 #buttons{
-
+  width: 20%;
     margin-left: 10%;
 }
+.text{
+  margin: 0 0 -15px 5px;
+}
 
-button, input {
-    width: 70%;
+button, #sizeM {
+  line-height: 2;
+align-items: center;
+  text-align: center;
+  padding: 17px 0 17px 0;
+  margin-bottom: 8%;
+    width: 100%;
     box-sizing: border-box;
     -webkit-appearance: none;
        -moz-appearance: none;
@@ -23,14 +34,12 @@ button, input {
     border-radius: 0.6em;
     color: #fff;
     cursor: pointer;
-    display: flex;
     -webkit-align-self: center;
         -ms-flex-item-align: center;
             align-self: center;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1;
-    padding: 1.2em 2.8em;
     text-decoration: none;
     text-align: center;
     text-transform: uppercase;
@@ -45,4 +54,16 @@ button, input {
   }
   button:hover {
     box-shadow: 0 0 10px 0 #0d6073 inset, 0 0 10px 4px #0d6073;
+  }
+
+  @media screen and (max-width: 970px), screen and (max-height: 500px) {
+    #canvas{
+      width: 400px;
+  }
+  button{
+    font-size: 10px;
+  }
+  #astar {
+    width: 60%;
+}
   }

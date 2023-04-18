@@ -1,12 +1,16 @@
 console.log(1); 
 const canvas = document.querySelector('canvas'); 
 const ctx = canvas.getContext("2d"); 
-canvas.width = 550; 
-canvas.height = 550; 
+
+var canva = document.getElementById('canvas');
+var canvasWidth = window.getComputedStyle(canvas).getPropertyValue("width");
+var canvasWidthNum = parseInt(canvasWidth.replace("px", ""));
+
+canvas.width = canvasWidthNum; 
+canvas.height = canvas.width; 
 let radius=10;
 let circles = []; // массив для хранения кругов
 let action=0;
-let k=2;
 const add = document.getElementById('add');
 const erase = document.getElementById('delete');
 const deleteAll = document.getElementById('deleteAll');
@@ -27,13 +31,13 @@ ctx.fill();
 
 function draw(x, y, r){
     ctx.beginPath(); 
-    ctx.arc(x, y, radius, 0, 2 * Math.PI); 
+    ctx.arc(x, y, r, 0, 2 * Math.PI); 
     ctx.fillStyle = 'black';
     ctx.fill(); 
-    let point= new Point(x, y, radius);
+    let point= new Point(x, y, r);
     circles.push(point); // сохраняем координаты и радиус круга в массиве
   }
-  function clear(x, y, r){ 
+function clear(x, y, r){ 
     for (let i = 0; i < circles.length; i++) { // проходим по всем кругам в массиве 
         const dist = Math.sqrt((x - circles[i].x) ** 2 + (y - circles[i].y) ** 2); // вычисляем расстояние до центра круга 
         if (dist <= circles[i].r) { // если клик попал внутрь круга 
@@ -69,10 +73,11 @@ deleteAll.addEventListener('click', function () {
     ctx.fill();
   });
 
-  canvas.addEventListener('mousedown', function(event) {  
+  canvas.addEventListener('click', function(event) {  
+
     if (action == 1) { 
-        const x = event.clientX - canvas.offsetLeft;  
-        const y = event.clientY - canvas.offsetTop;  
+      const x = event.clientX - canvas.offsetLeft;
+      const y = event.clientY - canvas.offsetTop;
         draw(x,y,radius); 
     } 
     else if (action == 2) {
@@ -93,6 +98,7 @@ function getRandomColor() { // функция для генерации случ
 }
 
 start.addEventListener('click', function () {
+let k=document.getElementById("sizeK").value;
   let clusters = kMeans(circles,k); // сохраняем результат выполнения функции kMeans в переменную
   for (const cluster of clusters) { // проходим по всем кластерам
     ctx.fillStyle = cluster.color; // устанавливаем цвет заливки контекста рисования из свойства color каждого кластера
