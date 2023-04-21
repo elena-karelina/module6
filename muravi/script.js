@@ -139,21 +139,35 @@ let beta = 1;
 let coef = 200;
 
 async function antAlgorithm(){
-    let vertexesLength = vertex.length;
 
-    let FirstPath = vertex.slice(0);
+    
     let indForFirstPath = [];
     let pheromones = [];
     let distance = [];
-
-    for (let i = 0; i < vertexesLength; ++i){
+    
+    for (let i = 0; i < vertex.length; ++i){
         indForFirstPath.push(i);
-        pheromones[i] = new Array(vertexesLength);
-        distance[i] = new Array(vertexesLength);
+        pheromones[i] = new Array(vertex.length);
+        distance[i] = new Array(vertex.length);
     }
 
+
+
+    let shuffledArr = indForFirstPath.sort(function(){
+        return Math.random() - 0.5;
+      });
+      let f = [];
+      for(let i = 0; i < vertex.length; i++){
+        f.push(vertex[shuffledArr[i]]);
+      }
+
+
+
+
     let bestAnt = [];
-    bestAnt.push(FirstPath, indForFirstPath, fullLensPath(indForFirstPath));
+
+
+    bestAnt.push(f, shuffledArr, fullLensPath(shuffledArr));
 
     for (let i = 0; i < vertex.length - 1; ++i){
         for (let j = i + 1; j < vertex.length; ++j){
@@ -163,7 +177,7 @@ async function antAlgorithm(){
     }
 
 
-    let end = vertexesLength * 2;
+    let end = vertex.length * 2;
 
     for (let generation = 0; generation < 100000; ++generation){
         if (end === 0){
@@ -173,24 +187,24 @@ async function antAlgorithm(){
 
         let ways = [];
         let path = [];
-        let path_idx = [];
+        let pathIdx = [];
 
         for (let ant = 0; ant < vertex.length; ++ant){
             path = [];
-            path_idx = [];
+            pathIdx = [];
 
             let startVertex_idx = ant;
             let startVertex = vertex[startVertex_idx].slice();
 
             path.push(startVertex);
-            path_idx.push(startVertex_idx);
+            pathIdx.push(startVertex_idx);
 
             while (path.length !== vertex.length){
                 let sumOfDesires = 0;
 
                 let p = [];
                 for (let j = 0; j < vertex.length; ++j) {
-                    if (path_idx.indexOf(j) !== -1){
+                    if (pathIdx.indexOf(j) !== -1){
                         continue;
                     }
                     let min = Math.min(startVertex_idx, j);
@@ -220,15 +234,15 @@ async function antAlgorithm(){
 
                 startVertex = vertex[startVertex_idx].slice();
                 path.push(startVertex.slice());
-                path_idx.push(startVertex_idx);
+                pathIdx.push(startVertex_idx);
             }
-            ways.push([path.slice(), path_idx.slice(), fullLensPath(path_idx)])
+            ways.push([path.slice(), pathIdx.slice(), fullLensPath(pathIdx)])
         }
 
         ways.sort((function (a, b) { return a[2] - b[2]}));
 
-        for (let i = 0; i < vertexesLength - 1; ++i){
-            for (let j = i + 1; j < vertexesLength; ++j){
+        for (let i = 0; i < vertex.length - 1; ++i){
+            for (let j = i + 1; j < vertex.length; ++j){
                 pheromones[i][j] *= evaporation;
             }
         }
@@ -236,7 +250,7 @@ async function antAlgorithm(){
         for (let i = 0; i < ways.length; ++i){
             let idx_path = ways[i][1].slice();
             let lenOfPath = ways[i][2]
-            for (let j = 0; j < vertexesLength - 1; ++j){
+            for (let j = 0; j < vertex.length - 1; ++j){
                 let min = Math.min(idx_path[j], idx_path[j + 1]);
                 let max = Math.max(idx_path[j], idx_path[j + 1]);
                 pheromones[min][max] += coef / lenOfPath;
@@ -249,7 +263,7 @@ async function antAlgorithm(){
             drawNewPath(bestAnt[0], newBestAnt[0]);
             bestAnt = newBestAnt.slice();
             drawingPoints();
-            end = vertexesLength * 2;
+            end = vertex.length * 2;
         }
 
         end -= 1;
