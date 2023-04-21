@@ -114,9 +114,10 @@ begin.addEventListener('click', function () {
   if (startCell.x!=null&&finishCell.x!=null)
   {
     astar();
+
   }
+
 });
-// nu tipa
 async function returnPath(finalNode) {
   let temp = finalNode.parent
   while (temp.parent != null) {
@@ -156,8 +157,10 @@ async function even() {
     else {
       matrix[colums - 1][getRandomItem(directions)] = true;
       directions = [];
+      if (animation.checked) {
       drawMaze();
       await delay(100);
+      }
     }
   }
   directions = []
@@ -168,8 +171,10 @@ async function even() {
     if (!matrix[i][colums - 2] || i == colums - 1) {
       matrix[getRandomItem(directions)][colums - 1] = true;
       directions = [];
+      if (animation.checked) {
       drawMaze();
       await delay(100);
+      }
     }
   }
 
@@ -333,14 +338,12 @@ async function astar() {
   if (found) {
     return;
   }
-  found = true
   var startNode = new Node;
   startNode.g = 0;
   startNode.parent = null;
   startNode.position = startCell;
   open.push(startNode);
-  let k = 0;
-  while (k == 0 && open.length > 0) {
+  while (!found && open.length > 0) {
     open.sort(compareF);
 
     let nowNode = open.shift();
@@ -355,10 +358,7 @@ async function astar() {
       let position = new Cell(j, i - 1);
       let neighbor = new Node(nowNode.g + 1, nowNode, position);
       if (neighbor.forCell(finishCell)) {
-        k = 1;
-        console.log(open[0].f);
-        console.log(open[0].position);
-        console.log(1);
+        found=true;
         returnPath(neighbor);
         break;
       }
@@ -369,10 +369,7 @@ async function astar() {
       let position = new Cell(j, i + 1);
       let neighbor = new Node(nowNode.g + 1, nowNode, position);
       if (neighbor.forCell(finishCell)) {
-        k = 1;
-        console.log(open[0].f);
-        console.log(open[0].position);
-        console.log(2);
+        found=true;
         returnPath(neighbor);
         break;
       }
@@ -383,10 +380,7 @@ async function astar() {
       let position = new Cell(j - 1, i);
       let neighbor = new Node(nowNode.g + 1, nowNode, position);
       if (neighbor.forCell(finishCell)) {
-        k = 1;
-        console.log(open[0].f);
-        console.log(open[0].position);
-        console.log(3);
+        found=true;
         returnPath(neighbor);
         break;
       }
@@ -397,10 +391,7 @@ async function astar() {
       let position = new Cell(j + 1, i);
       let neighbor = new Node(nowNode.g + 1, nowNode, position);
       if (neighbor.forCell(finishCell)) {
-        k = 1;
-        console.log(open[0].f);
-        console.log(open[0].position);
-        console.log(4);
+        found=true;
         returnPath(neighbor);
         break;
       }
@@ -410,6 +401,10 @@ async function astar() {
     await delay(delay_timeout);
   }
   
+  if (!found){
+    await delay(100);
+    alert("You are cringe 🥰");
+  }
 }
 
 function tick() {
@@ -500,7 +495,6 @@ function tick() {
   });
 
 }
-
 
 
 

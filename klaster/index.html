@@ -12,17 +12,20 @@
 </head>
 
 <body>
-   
+
    <div id="header">
       <div class="algoritm"><a href="../main/index.html" class="link"><span>Главная</span></a></div>
-      <div class="algoritm"><a href="../astar/index.html" class="link" ><span>A*</span></a></div>
+      <div class="algoritm"><a href="../astar/index.html" class="link"><span>A*</span></a></div>
       <div class="algoritm"><a href="#" class="link active"><span>Алгоритм<br>кластеризации</span></a> </div>
-      <div class="algoritm"><a href="../geneticheskiy/index.html" class="link"><span>Генетический<br>алгоритм</span> </a></div>
+      <div class="algoritm"><a href="../geneticheskiy/index.html" class="link"><span>Генетический<br>алгоритм</span>
+         </a></div>
       <div class="algoritm"><a href="../muravi/index.html" class="link"><span>Муравьиный<br>алгоритм</span></a></div>
       <div class="algoritm"><a href="../derevo/index.html" class="link"><span>Дерево <br>решений</span></a></div>
       <div class="algoritm"><a href="../neyronka/index.html" class="link"><span>Нейронная <br>сеть</span></a></div>
    </div>
    <div id="main">
+      <div class="crige">
+      </div>
       <div id="klaster">
          <div id="canva">
             <canvas id="canvas"></canvas>
@@ -32,13 +35,18 @@
             <br><button id="delete">удалить <br>точки</button>
             <br><button id="deleteAll">очистить</button>
             <p class="text"> Количество кластеров:</p>
-            <br><input type="number" size="1" id="sizeK" min="1" max="10" step="1"  value="2">
-            <br><button id="start">k-means</button>
+            <br><input type="number" size="1" id="sizeK" min="1" max="10" step="1" value="2">
+            <br><button id="startK">k-means</button>
+            <br><button id="startI">Иерархический</button>
+            <br><button id="compare">Сравнение</button> 
          </div>
+         
+      </div>
+      <div class="crige"><img id="scheme" src="Group 2.png">
       </div>
 
    </div>
-   <script src="claster_scripy.js"></script> 
+   <script src="claster_scripy.js"></script>
 </body>
 
 </html>
